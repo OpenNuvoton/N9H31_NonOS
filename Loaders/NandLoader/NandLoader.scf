@@ -1,0 +1,36 @@
+;/**************************************************************************//**
+; * @file     NandLoader.scf
+; * @brief    NandLoader scf file for N9H3x series.
+; *
+; * SPDX-License-Identifier: Apache-2.0
+; * @copyright (C) 2024 Nuvoton Technology Corp. All rights reserved.
+; *****************************************************************************/
+
+ROM_LOAD 0x900000
+{
+    ROM +0
+    {
+        sys_init.o (WB_INIT, +First)
+        anon$$obj.o
+        __main.o(!!!)
+        * (+RO)
+        * (+RW, +ZI) 
+        
+    }
+    
+    RAM 0x0
+    {
+        vectors.o(Vect, +First)  
+    }
+      
+    
+    HEAP 0x1000000 UNINIT
+    {
+        heap.o (+ZI)
+    }
+
+	STACK 0x1800000 UNINIT
+	{
+		stack.o (+ZI)
+	}    
+}
