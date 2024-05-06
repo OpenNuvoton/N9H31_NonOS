@@ -377,7 +377,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\Driver\Include;..\..\..\ThirdParty\FATFS\src;..\..\JPEG</IncludePath>
+              <IncludePath>..\..\..\Driver\Include;..\..\..\ThirdParty\FATFS\source;..\..\JPEG</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -509,7 +509,7 @@
             <File>
               <FileName>ff.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\ThirdParty\FATFS\src\ff.c</FilePath>
+              <FilePath>..\..\..\ThirdParty\FatFs\source\ff.c</FilePath>
             </File>
           </Files>
         </Group>

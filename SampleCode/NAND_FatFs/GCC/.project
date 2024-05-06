@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>eMMC_FATFS</name>
+	<name>NAND_FatFs</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -35,6 +35,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>GNandLib</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>Src</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -45,19 +50,19 @@
 			<locationURI>PARENT-3-PROJECT_LOC/Driver/Source</locationURI>
 		</link>
 		<link>
-			<name>FATFS/source</name>
+			<name>FATFS/src</name>
 			<type>2</type>
-			<locationURI>$%7BPARENT-3-PROJECT_LOC%7D/ThirdParty/FatFs/source</locationURI>
+			<locationURI>$%7BPARENT-3-PROJECT_LOC%7D/ThirdParty/FATFS/source</locationURI>
+		</link>
+		<link>
+			<name>GNandLib/GNandLib</name>
+			<type>2</type>
+			<locationURI>$%7BPARENT-3-PROJECT_LOC%7D/Library/GNandLib</locationURI>
 		</link>
 		<link>
 			<name>Src/diskio.c</name>
 			<type>1</type>
 			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/diskio.c</locationURI>
-		</link>
-		<link>
-			<name>Src/eMMCGlue.c</name>
-			<type>1</type>
-			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/eMMCGlue.c</locationURI>
 		</link>
 		<link>
 			<name>Src/main.c</name>
@@ -220,12 +225,39 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1714641580224</id>
-			<name>FATFS/source</name>
+			<id>1556852752984</id>
+			<name>FATFS/src</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-ff.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1556852752997</id>
+			<name>FATFS/src</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-option</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1714718131702</id>
+			<name>GNandLib/GNandLib</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-nand.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1714718131712</id>
+			<name>GNandLib/GNandLib</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-include</arguments>
 			</matcher>
 		</filter>
 	</filteredResources>

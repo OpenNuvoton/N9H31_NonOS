@@ -47,7 +47,7 @@
 		<link>
 			<name>FATFS/src</name>
 			<type>2</type>
-			<locationURI>$%7BPARENT-3-PROJECT_LOC%7D/ThirdParty/FATFS/src</locationURI>
+			<locationURI>$%7BPARENT-3-PROJECT_LOC%7D/ThirdParty/FATFS/source</locationURI>
 		</link>
 		<link>
 			<name>Src/SDGlue.c</name>

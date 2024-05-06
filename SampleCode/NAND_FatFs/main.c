@@ -29,7 +29,7 @@ WORD acc_files, acc_dirs;
 FILINFO Finfo;
 
 char Line[256];                         /* Console input buffer */
-#if _USE_LFN
+#if FF_USE_LFN
 char Lfname[512];
 #endif
 
@@ -191,8 +191,8 @@ FRESULT scan_files (
     if ((res = f_opendir(&dirs, path)) == FR_OK) {
         i = strlen(path);
         while (((res = f_readdir(&dirs, &Finfo)) == FR_OK) && Finfo.fname[0]) {
-            if (_FS_RPATH && Finfo.fname[0] == '.') continue;
-#if _USE_LFN
+            if (FF_FS_RPATH && Finfo.fname[0] == '.') continue;
+#if FF_USE_LFN
             fn = *Finfo.lfname ? Finfo.lfname : Finfo.fname;
 #else
             fn = Finfo.fname;
@@ -301,7 +301,19 @@ unsigned long get_fattime (void)
     return tmr;
 }
 
+/***********************************************/
+/* Volume management table defined by user (required when FF_MULTI_PARTITION == 1) */
 
+PARTITION VolToPart[] = {
+    {0, 1},    /* "0:" ==> Physical drive 0, 1st partition */
+    {0, 2},    /* "1:" ==> Physical drive 0, 2nd partition */
+    {1, 0}     /* "2:" ==> Physical drive 1, auto detection */
+};
+
+//DWORD plist[] = {50, 50, 0, 0};  /* Divide drive into two partitions */
+DWORD plist[] = {56000, 200000, 0, 0};  /* Divide drive into two partitions */
+
+/***********************************************/
 static FIL file1, file2;        /* File objects */
 
 int main(void)
@@ -312,6 +324,7 @@ int main(void)
     FATFS       *fs;              /* Pointer to file system object */
     BYTE        NAND_Drv = 0;
     TCHAR       nand_path[] = { '0', ':', 0 };    /* NAND drive started from 0 */
+    TCHAR       nand_path1[] = { '1', ':', 0 };    /* NAND drive started from 0 */
     FRESULT     res;
 
     DIR dir;                /* Directory object */
@@ -339,7 +352,20 @@ int main(void)
 
 	Buff = (BYTE *)((UINT32)&Buff_Pool[0] | 0x80000000);   /* use non-cache buffer */
 
+#if 0
+/**************************************/
+    /* Initialize a brand-new disk drive mapped to physical drive 0 */
+
+    f_fdisk(0, plist, Buff);                    /* Divide physical drive 0 */
+
+    f_mkfs("0:", FM_ANY, FF_MAX_SS, Buff, FF_MAX_SS);    /* Create FAT volume on the logical drive 0 */
+    f_mkfs("1:", FM_ANY, FF_MAX_SS, Buff, FF_MAX_SS);    /* Create FAT volume on the logical drive 1 */
+
+/**************************************/
+#endif
+
     f_mount(&gFatfsVol, nand_path, 1);
+
     for (;;) {
 
         sysprintf(_T("NAND>"));
@@ -348,8 +374,28 @@ int main(void)
         switch (*ptr++) {
 
         case 'q' :  /* Exit program */
+            f_mount(0, nand_path, 0);
+            f_mount(0, nand_path1, 0);
             sysprintf("exit, bye!\n");
             return 0;
+
+        case '0' :
+        	ptr--;
+        	*(ptr+1) = ':';
+        	*(ptr+2) = 0;
+            f_mount(0, nand_path1, 0);
+        	put_rc(f_chdrive((TCHAR *)ptr));
+            f_mount(&gFatfsVol, nand_path, 1);
+        	break;
+
+        case '1' :
+        	ptr--;
+        	*(ptr+1) = ':';
+        	*(ptr+2) = 0;
+            f_mount(0, nand_path, 0);
+        	put_rc(f_chdrive((TCHAR *)ptr));
+            f_mount(&gFatfsVol, nand_path1, 1);
+        	break;
 
         case 'd' :
             switch (*ptr++) {
@@ -440,7 +486,7 @@ int main(void)
                        fs->fatbase, fs->dirbase, fs->database
                       );
                 acc_size = acc_files = acc_dirs = 0;
-#if _USE_LFN
+#if FF_USE_LFN
                 Finfo.lfname = Lfname;
                 Finfo.lfsize = sizeof(Lfname);
 #endif
@@ -480,7 +526,7 @@ int main(void)
                            (Finfo.fattrib & AM_ARC) ? 'A' : '-',
                            (Finfo.fdate >> 9) + 1980, (Finfo.fdate >> 5) & 15, Finfo.fdate & 31,
                            (Finfo.ftime >> 11), (Finfo.ftime >> 5) & 63, Finfo.fsize, Finfo.fname);
-#if _USE_LFN
+#if FF_USE_LFN
                     for (p2 = strlen(Finfo.fname); p2 < 14; p2++)
                         sysprintf(" ");
                     sysprintf("%s\n", Lfname);
@@ -656,7 +702,7 @@ int main(void)
                 f_close(&file1);
                 f_close(&file2);
                 break;
-#if _FS_RPATH
+#if FF_FS_RPATH
             case 'g' :  /* fg <path> - Change current directory */
                 while (*ptr == ' ') ptr++;
                 put_rc(f_chdir(ptr));
@@ -668,13 +714,13 @@ int main(void)
 				put_rc(f_chdrive((TCHAR *)ptr));
                 break;
 #endif
-#if _USE_MKFS
-            case 'm' :  /* fm <partition rule> <sect/clust> - Create file system */
-                if (!xatoi(&ptr, &p2) || !xatoi(&ptr, &p3)) break;
+#if FF_USE_MKFS
+            case 'm' :  /* fm <sect/clust> - Create file system */
+                if (!xatoi(&ptr, &p2)) break;
                 sysprintf("The memory card will be formatted. Are you sure? (Y/n)=");
                 get_line(ptr, sizeof(Line));
                 if (*ptr == 'Y')
-                    put_rc(f_mkfs("", (BYTE)p2, (WORD)p3));
+                    put_rc(f_mkfs("", FM_ANY, (BYTE)p2, Buff, BUFF_SIZE));
                 break;
 #endif
             case 'z' :  /* fz [<rw size>] - Change R/W length for fr/fw/fx command */
@@ -686,7 +732,7 @@ int main(void)
             break;
         case '?':       /* Show usage */
             sysprintf(
-                //_T("n: - Change default drive (SD drive is 0~1)\n")
+                _T("n: - Change default drive (0 or 1)\n")
                 _T("dd [<lba>] - Dump sector\n")
                 //_T("ds <pd#> - Show disk status\n")
                 _T("\n")
@@ -714,7 +760,7 @@ int main(void)
                 _T("fx <src file> <dst file> - Copy a file\n")
                 _T("fg <path> - Change current directory\n")
                 //_T("fj <ld#> - Change current drive. For example: <fj 4:>\n")
-                _T("fm <ld#> <rule> <cluster size> - Create file system\n")
+                _T("fm <ld#> <cluster size> - Create file system\n")
                 _T("\n")
             );
             break;

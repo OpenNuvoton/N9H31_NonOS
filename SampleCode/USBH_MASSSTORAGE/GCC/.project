@@ -57,7 +57,7 @@
 		<link>
 			<name>FATFS/FATFS</name>
 			<type>2</type>
-			<locationURI>PARENT-3-PROJECT_LOC/ThirdParty/FATFS/src</locationURI>
+			<locationURI>PARENT-3-PROJECT_LOC/ThirdParty/FATFS/source</locationURI>
 		</link>
 		<link>
 			<name>Src/diskio.c</name>
@@ -226,7 +226,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1556534136424</id>
+			<id>1714726091858</id>
 			<name>FATFS/FATFS</name>
 			<type>5</type>
 			<matcher>
@@ -235,7 +235,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1556534136441</id>
+			<id>1714726091866</id>
 			<name>FATFS/FATFS</name>
 			<type>10</type>
 			<matcher>

@@ -296,8 +296,8 @@ extern NAND_INFO_T tNAND;
 
 
 int32_t NAND_Init(NDISK_T *NDInfo);
-int32_t NAND_ReadPage(int pba, int page, uint8_t *buff);
-int32_t NAND_WritePage(int pba, int page, uint8_t *buff);
+int32_t NAND_ReadPage(int32_t pba, int32_t page, uint8_t *buff);
+int32_t NAND_WritePage(int32_t pba, int32_t page, uint8_t *buff);
 int32_t NAND_IsDirtyPage(int32_t pba, int32_t nPageNo);
 int32_t NAND_IsValidBlock(int32_t pba);
 int32_t NAND_EraseBlock(int32_t pba);

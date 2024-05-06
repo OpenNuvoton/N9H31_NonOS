@@ -26,7 +26,7 @@ WORD acc_files, acc_dirs;
 FILINFO Finfo;
 
 char Line[256];                         /* Console input buffer */
-#if _USE_LFN
+#if FF_USE_LFN
 char Lfname[512];
 #endif
 
@@ -40,6 +40,16 @@ uint32_t   g_hid_buff_pool[1024] __attribute__((aligned(32)));
 HID_DEV_T   *g_hid_list[CONFIG_HID_MAX_DEV];
 
 
+/***********************************************/
+/* Volume management table defined by user (required when FF_MULTI_PARTITION == 1) */
+
+PARTITION VolToPart[] = {
+    {0, 1},    /* "0:" ==> Physical drive 0, 1st partition */
+    {0, 2},    /* "1:" ==> Physical drive 0, 2nd partition */
+    {1, 0}     /* "2:" ==> Physical drive 1, auto detection */
+};
+
+/***********************************************/
 void delay_us(int usec)
 {
 #ifdef IS_FPGA

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>eMMC_FATFS</name>
+	<name>NandLoader</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -30,39 +30,34 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>FATFS</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>Src</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Driver/Driver</name>
-			<type>2</type>
-			<locationURI>PARENT-3-PROJECT_LOC/Driver/Source</locationURI>
-		</link>
-		<link>
-			<name>FATFS/source</name>
-			<type>2</type>
-			<locationURI>$%7BPARENT-3-PROJECT_LOC%7D/ThirdParty/FatFs/source</locationURI>
-		</link>
-		<link>
-			<name>Src/diskio.c</name>
+			<name>Driver/Startup_GCC.S</name>
 			<type>1</type>
-			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/diskio.c</locationURI>
+			<locationURI>PARENT-3-PROJECT_LOC/Driver/Source/Startup_GCC.S</locationURI>
 		</link>
 		<link>
-			<name>Src/eMMCGlue.c</name>
+			<name>Src/NandLoader.c</name>
 			<type>1</type>
-			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/eMMCGlue.c</locationURI>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/NandLoader.c</locationURI>
 		</link>
 		<link>
-			<name>Src/main.c</name>
+			<name>Src/lcd.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/main.c</locationURI>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/lcd.c</locationURI>
+		</link>
+		<link>
+			<name>Src/nand.c</name>
+			<type>1</type>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/nand.c</locationURI>
+		</link>
+		<link>
+			<name>Src/sys_uart.c</name>
+			<type>1</type>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/sys_uart.c</locationURI>
 		</link>
 	</linkedResources>
 	<filteredResources>
@@ -145,87 +140,6 @@
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-cache.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1557127426546</id>
-			<name>Driver/Driver</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-sys.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1557127426566</id>
-			<name>Driver/Driver</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-retarget.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1557127426583</id>
-			<name>Driver/Driver</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-GCC.ld</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1557127426599</id>
-			<name>Driver/Driver</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-Startup_GCC.S</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1557127426658</id>
-			<name>Driver/Driver</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-sys_uart.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1557127426688</id>
-			<name>Driver/Driver</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-sys_timer.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1557127426702</id>
-			<name>Driver/Driver</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-fmi.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1557127426715</id>
-			<name>Driver/Driver</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-system_N9H31.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1714641580224</id>
-			<name>FATFS/source</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-ff.c</arguments>
 			</matcher>
 		</filter>
 	</filteredResources>

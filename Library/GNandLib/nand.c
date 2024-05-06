@@ -829,7 +829,7 @@ int32_t NAND_MarkBadBlock(int32_t uBlock)
  *  @return   - 0  Successful.
  *            - 1  Fail.
  */
-int32_t NAND_ReadPage(int pba, int page, uint8_t *buff)
+int32_t NAND_ReadPage(int32_t pba, int32_t page, uint8_t *buff)
 {
 	int pageNo;
 	int volatile i;
@@ -884,7 +884,7 @@ int32_t NAND_ReadPage(int pba, int page, uint8_t *buff)
  *  @return   - 1  Fail.
  *            - 0  Successful.
  */
-int32_t NAND_WritePage(int pba, int page, uint8_t *buff)
+int32_t NAND_WritePage(int32_t pba, int32_t page, uint8_t *buff)
 {
 	int pageNo;
 

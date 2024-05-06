@@ -377,7 +377,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\Driver\Include;..\..\..\Library\GNandLib\Include;..\..\..\ThirdParty\FatFs-r0.13a\source</IncludePath>
+              <IncludePath>..\..\..\Driver\Include;..\..\..\Library\GNandLib\Include;..\..\..\ThirdParty\FatFs\source</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -534,7 +534,7 @@
             <File>
               <FileName>ff.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\ThirdParty\FatFs-r0.13a\source\ff.c</FilePath>
+              <FilePath>..\..\..\ThirdParty\FatFs\source\ff.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1068,7 +1068,7 @@
             <File>
               <FileName>ff.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\ThirdParty\FatFs-r0.13a\source\ff.c</FilePath>
+              <FilePath>..\..\..\ThirdParty\FatFs\source\ff.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1602,7 +1602,7 @@
             <File>
               <FileName>ff.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\ThirdParty\FatFs-r0.13a\source\ff.c</FilePath>
+              <FilePath>..\..\..\ThirdParty\FatFs\source\ff.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2136,7 +2136,7 @@
             <File>
               <FileName>ff.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\ThirdParty\FatFs-r0.13a\source\ff.c</FilePath>
+              <FilePath>..\..\..\ThirdParty\FatFs\source\ff.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2670,7 +2670,7 @@
             <File>
               <FileName>ff.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\ThirdParty\FatFs-r0.13a\source\ff.c</FilePath>
+              <FilePath>..\..\..\ThirdParty\FatFs\source\ff.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3204,7 +3204,7 @@
             <File>
               <FileName>ff.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\ThirdParty\FatFs-r0.13a\source\ff.c</FilePath>
+              <FilePath>..\..\..\ThirdParty\FatFs\source\ff.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3738,7 +3738,7 @@
             <File>
               <FileName>ff.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\ThirdParty\FatFs-r0.13a\source\ff.c</FilePath>
+              <FilePath>..\..\..\ThirdParty\FatFs\source\ff.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4272,7 +4272,7 @@
             <File>
               <FileName>ff.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\ThirdParty\FatFs-r0.13a\source\ff.c</FilePath>
+              <FilePath>..\..\..\ThirdParty\FatFs\source\ff.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4806,7 +4806,7 @@
             <File>
               <FileName>ff.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\ThirdParty\FatFs-r0.13a\source\ff.c</FilePath>
+              <FilePath>..\..\..\ThirdParty\FatFs\source\ff.c</FilePath>
             </File>
           </Files>
         </Group>

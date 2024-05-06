@@ -22,7 +22,7 @@ WORD acc_files, acc_dirs;
 FILINFO Finfo;
 
 char Line[256];             			/* Console input buffer */
-#if _USE_LFN
+#if FF_USE_LFN
 char Lfname[512];
 #endif
 
@@ -34,6 +34,17 @@ BYTE Buff_Pool[BUFF_SIZE] __attribute__((aligned(32)));       /* Working buffer 
 #endif
 
 BYTE  *Buff;
+
+/***********************************************/
+/* Volume management table defined by user (required when FF_MULTI_PARTITION == 1) */
+
+PARTITION VolToPart[] = {
+    {0, 1},    /* "0:" ==> Physical drive 0, 1st partition */
+    {0, 2},    /* "1:" ==> Physical drive 0, 2nd partition */
+    {1, 0}     /* "2:" ==> Physical drive 1, auto detection */
+};
+
+/***********************************************/
 
 void timer_init()
 {
@@ -187,8 +198,8 @@ FRESULT scan_files (
     if ((res = f_opendir(&dirs, path)) == FR_OK) {
         i = strlen(path);
         while (((res = f_readdir(&dirs, &Finfo)) == FR_OK) && Finfo.fname[0]) {
-            if (_FS_RPATH && Finfo.fname[0] == '.') continue;
-#if _USE_LFN
+            if (FF_FS_RPATH && Finfo.fname[0] == '.') continue;
+#if FF_USE_LFN
             fn = *Finfo.lfname ? Finfo.lfname : Finfo.fname;
 #else
             fn = Finfo.fname;
@@ -281,7 +292,7 @@ void SDH_IRQHandler(void)
             isr = inpw(REG_SDH_INTSTS);
         }
 
-#ifdef _USE_DAT3_DETECT_
+#ifdef FF_USE_DAT3_DETECT_
         if (!(isr & SDH_INTSTS_CDSTS0_Msk)) {
             SD0.IsCardInsert = FALSE;
             sysprintf("\nCard Remove!\n");
@@ -313,7 +324,7 @@ void SDH_IRQHandler(void)
             isr = inpw(REG_SDH_INTSTS);
         }
 
-#ifdef _USE_DAT3_DETECT_
+#ifdef FF_USE_DAT3_DETECT_
         if (!(isr & SDH_INTSTS_CDSTS1_Msk)) {
             SD0.IsCardInsert = FALSE;
             sysprintf("\nCard Remove!\n");
@@ -551,7 +562,7 @@ int32_t main(void)
                        fs->fatbase, fs->dirbase, fs->database
                       );
                 acc_size = acc_files = acc_dirs = 0;
-#if _USE_LFN
+#if FF_USE_LFN
                 Finfo.lfname = Lfname;
                 Finfo.lfsize = sizeof(Lfname);
 #endif
@@ -591,7 +602,7 @@ int32_t main(void)
                            (Finfo.fattrib & AM_ARC) ? 'A' : '-',
                            (Finfo.fdate >> 9) + 1980, (Finfo.fdate >> 5) & 15, Finfo.fdate & 31,
                            (Finfo.ftime >> 11), (Finfo.ftime >> 5) & 63, Finfo.fsize, Finfo.fname);
-#if _USE_LFN
+#if FF_USE_LFN
                     for (p2 = strlen(Finfo.fname); p2 < 14; p2++)
                         sysprintf(" ");
                     sysprintf("%s\n", Lfname);
@@ -767,7 +778,7 @@ int32_t main(void)
                 f_close(&file1);
                 f_close(&file2);
                 break;
-#if _FS_RPATH
+#if FF_FS_RPATH
             case 'g' :  /* fg <path> - Change current directory */
                 while (*ptr == ' ') ptr++;
                 put_rc(f_chdir(ptr));
@@ -779,13 +790,13 @@ int32_t main(void)
 				put_rc(f_chdrive((TCHAR *)ptr));
                 break;
 #endif
-#if _USE_MKFS
+#if FF_USE_MKFS
             case 'm' :  /* fm <partition rule> <sect/clust> - Create file system */
                 if (!xatoi(&ptr, &p2) || !xatoi(&ptr, &p3)) break;
                 sysprintf("The memory card will be formatted. Are you sure? (Y/n)=");
                 get_line(ptr, sizeof(Line));
                 if (*ptr == 'Y')
-                    put_rc(f_mkfs(0, (BYTE)p2, (WORD)p3));
+                    put_rc(f_mkfs("", FM_ANY, (BYTE)p2, Buff, BUFF_SIZE));
                 break;
 #endif
             case 'z' :  /* fz [<rw size>] - Change R/W length for fr/fw/fx command */

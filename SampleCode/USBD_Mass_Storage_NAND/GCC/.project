@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>eMMC_FATFS</name>
+	<name>USBD_Mass_Storage_NAND</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -30,7 +30,7 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>FATFS</name>
+			<name>GNandLib</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -45,19 +45,19 @@
 			<locationURI>PARENT-3-PROJECT_LOC/Driver/Source</locationURI>
 		</link>
 		<link>
-			<name>FATFS/source</name>
+			<name>GNandLib/GNandLib</name>
 			<type>2</type>
-			<locationURI>$%7BPARENT-3-PROJECT_LOC%7D/ThirdParty/FatFs/source</locationURI>
+			<locationURI>$%7BPARENT-3-PROJECT_LOC%7D/Library/GNandLib</locationURI>
 		</link>
 		<link>
-			<name>Src/diskio.c</name>
+			<name>Src/MassStorage.c</name>
 			<type>1</type>
-			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/diskio.c</locationURI>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/MassStorage.c</locationURI>
 		</link>
 		<link>
-			<name>Src/eMMCGlue.c</name>
+			<name>Src/descriptors.c</name>
 			<type>1</type>
-			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/eMMCGlue.c</locationURI>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/descriptors.c</locationURI>
 		</link>
 		<link>
 			<name>Src/main.c</name>
@@ -148,7 +148,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1557127426546</id>
+			<id>1557128991025</id>
 			<name>Driver/Driver</name>
 			<type>5</type>
 			<matcher>
@@ -157,16 +157,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1557127426566</id>
-			<name>Driver/Driver</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-retarget.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1557127426583</id>
+			<id>1557128991037</id>
 			<name>Driver/Driver</name>
 			<type>5</type>
 			<matcher>
@@ -175,7 +166,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1557127426599</id>
+			<id>1557128991052</id>
 			<name>Driver/Driver</name>
 			<type>5</type>
 			<matcher>
@@ -184,7 +175,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1557127426658</id>
+			<id>1557128991065</id>
 			<name>Driver/Driver</name>
 			<type>5</type>
 			<matcher>
@@ -193,7 +184,16 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1557127426688</id>
+			<id>1557128991082</id>
+			<name>Driver/Driver</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-usbd.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1557128991095</id>
 			<name>Driver/Driver</name>
 			<type>5</type>
 			<matcher>
@@ -202,16 +202,16 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1557127426702</id>
+			<id>1557128991108</id>
 			<name>Driver/Driver</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-fmi.c</arguments>
+				<arguments>1.0-name-matches-false-false-retarget.c</arguments>
 			</matcher>
 		</filter>
 		<filter>
-			<id>1557127426715</id>
+			<id>1557128991124</id>
 			<name>Driver/Driver</name>
 			<type>5</type>
 			<matcher>
@@ -220,12 +220,21 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1714641580224</id>
-			<name>FATFS/source</name>
+			<id>1714723632861</id>
+			<name>GNandLib/GNandLib</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-ff.c</arguments>
+				<arguments>1.0-name-matches-false-false-nand.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1714723632868</id>
+			<name>GNandLib/GNandLib</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-include</arguments>
 			</matcher>
 		</filter>
 	</filteredResources>

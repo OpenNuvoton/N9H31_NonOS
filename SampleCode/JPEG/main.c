@@ -217,6 +217,16 @@ unsigned long get_fattime(void)
 }
 
 
+/***********************************************/
+/* Volume management table defined by user (required when FF_MULTI_PARTITION == 1) */
+
+PARTITION VolToPart[] = {
+    {0, 1},    /* "0:" ==> Physical drive 0, 1st partition */
+    {0, 2},    /* "1:" ==> Physical drive 0, 2nd partition */
+    {1, 0}     /* "2:" ==> Physical drive 1, auto detection */
+};
+
+/***********************************************/
 INT32 main()
 {
     UINT8 u8Item;

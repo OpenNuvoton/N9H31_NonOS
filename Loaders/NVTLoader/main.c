@@ -99,7 +99,8 @@ void sysInit(void)
 
 UINT32 NVT_LoadAppFromNAND(void)
 {
-    uint32_t bytes, result, offset=0;
+	UINT bytes;
+    uint32_t result, offset=0;
     INT found_app = 0;
     UINT32 u32TotalSize;
     void    (*_jump)(void);
