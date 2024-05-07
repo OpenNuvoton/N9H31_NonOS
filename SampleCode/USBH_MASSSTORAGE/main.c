@@ -37,9 +37,14 @@ BYTE  *Buff;
 /* Volume management table defined by user (required when FF_MULTI_PARTITION == 1) */
 
 PARTITION VolToPart[] = {
-    {0, 1},    /* "0:" ==> Physical drive 0, 1st partition */
-    {0, 2},    /* "1:" ==> Physical drive 0, 2nd partition */
-    {1, 0}     /* "2:" ==> Physical drive 1, auto detection */
+    {0, 0},    /* "0:" ==> Physical drive 0, auto detection */
+    {1, 0},    /* "1:" ==> Physical drive 1, auto detection */
+    {2, 0},    /* "2:" ==> Physical drive 2, auto detection */
+    {3, 0},    /* "2:" ==> Physical drive 3, auto detection */
+    {4, 0},    /* "2:" ==> Physical drive 4, auto detection */
+    {5, 0},    /* "2:" ==> Physical drive 5, auto detection */
+    {6, 0},    /* "2:" ==> Physical drive 6, auto detection */
+    {7, 0}     /* "2:" ==> Physical drive 7, auto detection */
 };
 
 /***********************************************/
@@ -320,6 +325,7 @@ int32_t main(void)
     FATFS       *fs;              /* Pointer to file system object */
     TCHAR       usb_path[] = { '3', ':', 0 };    /* USB drive started from 3 */
     FRESULT     res;
+    BYTE        USBH_Drv = 3;
 
     DIR dir;                /* Directory object */
     UINT s1, s2, cnt;
@@ -393,7 +399,7 @@ int32_t main(void)
         case '#':
             for (p1 = 0; p1 < 10000000; p1 += 8)
             {
-                res = (FRESULT)disk_read(3, Buff, p1, 8);
+                res = (FRESULT)disk_read(USBH_Drv, Buff, p1, 8);
                 sysprintf("Read sector %d, rc=%d\n", p1, (WORD)res);
                 if (res)
                 {
@@ -407,7 +413,7 @@ int32_t main(void)
             {
             case 'd' :  /* dd [<lba>] - Dump sector */
                 if (!xatoi(&ptr, &p2)) p2 = sect;
-                res = (FRESULT)disk_read(3, Buff, p2, 1);
+                res = (FRESULT)disk_read(USBH_Drv, Buff, p2, 1);
                 if (res)
                 {
                     sysprintf("rc=%d\n", (WORD)res);
@@ -463,13 +469,13 @@ int32_t main(void)
             case 'r' :  /* br <sector> [<n>] - Read disk into R/W buffer */
                 if (!xatoi(&ptr, &p2)) break;
                 if (!xatoi(&ptr, &p3)) p3 = 1;
-                sysprintf("rc=%d\n", disk_read(0, Buff, p2, p3));
+                sysprintf("rc=%d\n", disk_read(USBH_Drv, Buff, p2, p3));
                 break;
 
             case 'w' :  /* bw <sector> [<n>] - Write R/W buffer into disk */
                 if (!xatoi(&ptr, &p2)) break;
                 if (!xatoi(&ptr, &p3)) p3 = 1;
-                sysprintf("rc=%d\n", disk_write(0, Buff, p2, p3));
+                sysprintf("rc=%d\n", disk_write(USBH_Drv, Buff, p2, p3));
                 break;
 
             case 'f' :  /* bf <n> - Fill working buffer */

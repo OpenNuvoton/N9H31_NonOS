@@ -39,9 +39,14 @@ BYTE  *Buff;
 /* Volume management table defined by user (required when FF_MULTI_PARTITION == 1) */
 
 PARTITION VolToPart[] = {
-    {0, 1},    /* "0:" ==> Physical drive 0, 1st partition */
-    {0, 2},    /* "1:" ==> Physical drive 0, 2nd partition */
-    {1, 0}     /* "2:" ==> Physical drive 1, auto detection */
+    {0, 0},    /* "0:" ==> Physical drive 0, auto detection */
+    {1, 0},    /* "1:" ==> Physical drive 1, auto detection */
+    {2, 0},    /* "2:" ==> Physical drive 2, auto detection */
+    {3, 0},    /* "2:" ==> Physical drive 3, auto detection */
+    {4, 0},    /* "2:" ==> Physical drive 4, auto detection */
+    {5, 0},    /* "2:" ==> Physical drive 5, auto detection */
+    {6, 0},    /* "2:" ==> Physical drive 6, auto detection */
+    {7, 0}     /* "2:" ==> Physical drive 7, auto detection */
 };
 
 /***********************************************/
