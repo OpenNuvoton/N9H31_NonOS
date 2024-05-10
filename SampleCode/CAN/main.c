@@ -20,6 +20,7 @@
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
 STR_CANMSG_T rrMsg;
+uint32_t TX_FLAG = 0;
 
 void CAN_ShowMsg(STR_CANMSG_T* Msg);
 
@@ -28,9 +29,11 @@ void CAN_ShowMsg(STR_CANMSG_T* Msg);
 /*---------------------------------------------------------------------------------------------------------*/
 void CAN_MsgInterrupt(UINT32 uCAN, uint32_t u32IIDR)
 {
-    sysprintf("Msg-%d INT and Callback \n", (u32IIDR-1));
-    CAN_Receive(uCAN, (u32IIDR-1),&rrMsg);
-    CAN_ShowMsg(&rrMsg);
+    if(CAN_Receive(uCAN, (u32IIDR-1),&rrMsg))
+    {
+        sysprintf("Msg-%d INT and Callback \n", (u32IIDR-1));
+        CAN_ShowMsg(&rrMsg);
+    }
 }
 
 
@@ -41,117 +44,57 @@ void CAN_MsgInterrupt(UINT32 uCAN, uint32_t u32IIDR)
   */
 void CAN0_IRQHandler(void)
 {
-    uint32_t u8IIDRstatus;
+    uint32_t u32IIDRstatus;
+    uint32_t u32Status;
 
-    u8IIDRstatus = inpw(REG_CAN0_IIDR);
+    u32Status = inpw(REG_CAN0_STATUS);
+    u32IIDRstatus = inpw(REG_CAN0_IIDR);
 
-    if(u8IIDRstatus == 0x00008000)        /* Check Status Interrupt Flag (Error status Int and Status change Int) */
+    if(u32Status & CAN_STATUS_RXOK_Msk)
     {
-        /**************************/
-        /* Status Change interrupt*/
-        /**************************/
-        if(inpw(REG_CAN0_STATUS) & CAN_STATUS_RXOK_Msk)
-        {
-            outpw(REG_CAN0_STATUS, inpw(REG_CAN0_STATUS) & ~CAN_STATUS_RXOK_Msk);  /* Clear Rx Ok status*/
+        outpw(REG_CAN0_STATUS, u32Status & ~CAN_STATUS_RXOK_Msk);  /* Clear Rx Ok status*/
 
             sysprintf("RX OK INT\n") ;
         }
 
-        if(inpw(REG_CAN0_STATUS) & CAN_STATUS_TXOK_Msk)
-        {
-            outpw(REG_CAN0_STATUS, inpw(REG_CAN0_STATUS) & ~CAN_STATUS_TXOK_Msk);  /* Clear Tx Ok status*/
+    if(u32Status & CAN_STATUS_TXOK_Msk)
+    {
+        outpw(REG_CAN0_STATUS, u32Status & ~CAN_STATUS_TXOK_Msk);  /* Clear Tx Ok status*/
+        TX_FLAG = 1;
+        sysprintf("TX OK INT\n") ;
+    }
 
-            sysprintf("TX OK INT\n") ;
-        }
-
+    if(u32IIDRstatus == 0x00008000)
+    {
         /**************************/
         /* Error Status interrupt */
         /**************************/
-        if(inpw(REG_CAN0_STATUS) & CAN_STATUS_EWARN_Msk)
+        if(u32Status & CAN_STATUS_EWARN_Msk)
         {
             sysprintf("EWARN INT\n") ;
         }
 
-        if(inpw(REG_CAN0_STATUS) & CAN_STATUS_BOFF_Msk)
+        if(u32Status & CAN_STATUS_BOFF_Msk)
         {
             sysprintf("BOFF INT\n") ;
         }
     }
-    else if (u8IIDRstatus!=0)
+
+    if (u32IIDRstatus!=0)
     {
-        sysprintf("=> Interrupt Pointer = %d\n", (u8IIDRstatus-1));
+        sysprintf("=> Interrupt Pointer = %d\n", (u32IIDRstatus-1));
 
-        CAN_MsgInterrupt(CAN0, u8IIDRstatus);
+        CAN_MsgInterrupt(CAN0, u32IIDRstatus);
 
-        CAN_CLR_INT_PENDING_BIT(CAN0, (u8IIDRstatus-1));      /* Clear Interrupt Pending */
+        CAN_CLR_INT_PENDING_BIT(CAN0, (u32IIDRstatus-1));      /* Clear Interrupt Pending */
 
     }
-    else if(inpw(REG_CAN0_WU_STATUS) == 1)
+
+    if(inpw(REG_CAN0_WU_STATUS) == 1)
     {
         sysprintf("Wake up\n");
 
         outpw(REG_CAN0_WU_STATUS, 0x0);  /* Write '0' to clear */
-    }
-
-}
-
-/**
-  * @brief  CAN1_IRQ Handler.
-  * @param  None.
-  * @return None.
-  */
-void CAN1_IRQHandler(void)
-{
-    uint32_t u8IIDRstatus;
-
-    u8IIDRstatus = inpw(REG_CAN1_IIDR);
-
-    if(u8IIDRstatus == 0x00008000)        /* Check Status Interrupt Flag (Error status Int and Status change Int) */
-    {
-        /**************************/
-        /* Status Change interrupt*/
-        /**************************/
-        if(inpw(REG_CAN1_STATUS) & CAN_STATUS_RXOK_Msk)
-        {
-            outpw(REG_CAN1_STATUS, inpw(REG_CAN1_STATUS) & ~CAN_STATUS_RXOK_Msk);  /* Clear Rx Ok status*/
-
-            sysprintf("RX OK INT\n") ;
-        }
-
-        if(inpw(REG_CAN1_STATUS) & CAN_STATUS_TXOK_Msk)
-        {
-            outpw(REG_CAN1_STATUS, inpw(REG_CAN1_STATUS) & ~CAN_STATUS_TXOK_Msk);  /* Clear Tx Ok status*/
-
-            sysprintf("TX OK INT\n") ;
-        }
-
-        /**************************/
-        /* Error Status interrupt */
-        /**************************/
-        if(inpw(REG_CAN1_STATUS) & CAN_STATUS_EWARN_Msk)
-        {
-            sysprintf("EWARN INT\n") ;
-        }
-
-        if(inpw(REG_CAN1_STATUS) & CAN_STATUS_BOFF_Msk)
-        {
-            sysprintf("BOFF INT\n") ;
-        }
-    }
-    else if (u8IIDRstatus!=0)
-    {
-        sysprintf("=> Interrupt Pointer = %d\n", (u8IIDRstatus-1));
-
-        CAN_MsgInterrupt(CAN1, u8IIDRstatus);
-
-        CAN_CLR_INT_PENDING_BIT(CAN1, (u8IIDRstatus-1));      /* Clear Interrupt Pending */
-
-    }
-    else if(inpw(REG_CAN1_WU_STATUS) == 1)
-    {
-        sysprintf("Wake up\n");
-
-        outpw(REG_CAN1_WU_STATUS, 0x0);/* Write '0' to clear */
     }
 
 }
@@ -168,21 +111,21 @@ void Note_Configure()
     sysprintf("|   The sample code provide a simple sample code for you study CAN       |\n");
     sysprintf("|   Before execute it, please check description as below                 |\n");
     sysprintf("|                                                                        |\n");
-    sysprintf("|   1.CAN0 and CAN1 connect to the same CAN BUS                          |\n");
-    sysprintf("|   2.Using UART0 as print message port(Both of NUC472/442 module boards)|\n");
+    sysprintf("|   1.CAN0 connect to CAN BUS                                            |\n");
+    sysprintf("|   2.Using UART0 as print message port                                  |\n");
     sysprintf("|                                                                        |\n");
     sysprintf("|  |--------|       |-----------|  CANBUS |-----------|       |--------| |\n");
     sysprintf("|  |        |------>|           |<------->|           |<------|        | |\n");
     sysprintf("|  |        |CAN0_TX|   CAN0    |  CAN1_H |   CAN1    |CAN1_TX|        | |\n");
-    sysprintf("|  | NUC472 |       |Transceiver|         |Transceiver|       | NUC472 | |\n");
-    sysprintf("|  | NUC442 |<------|           |<------->|           |------>| NUC442 | |\n");
+    sysprintf("|  | N9H31  |       |Transceiver|         |Transceiver|       | User's | |\n");
+    sysprintf("|  |        |<------|           |<------->|           |------>| Device | |\n");
     sysprintf("|  |        |CAN0_RX|           |  CAN1_L |           |CAN1_RX|        | |\n");
     sysprintf("|  |--------|       |-----------|         |-----------|       |--------| |\n");
-    sysprintf("|   |                                                           |        |\n");
-    sysprintf("|   |                                                           |        |\n");
-    sysprintf("|   V                                                           V        |\n");
-    sysprintf("| UART0                                                         UART0    |\n");
-    sysprintf("|(print message)                                          (print message)|\n");
+    sysprintf("|   |                                                                    |\n");
+    sysprintf("|   |                                                                    |\n");
+    sysprintf("|   V                                                                    |\n");
+    sysprintf("| UART0                                                                  |\n");
+    sysprintf("|(print message)                                                         |\n");
     sysprintf("+------------------------------------------------------------------------+\n");
 }
 
@@ -206,7 +149,11 @@ void Test_NormalMode_Tx(UINT32 uCAN)
     STR_CANMSG_T tMsg;
     uint32_t i;
 
-#if 1
+    sysprintf("\nMSG(1).Send STD_ID:0x7FF, Data[07,FF] \n");
+    for(i=0; i < 30000; i++); // wait print debug message
+
+    TX_FLAG = 0;
+
     /* Send a 11-bits message */
     tMsg.FrameType= DATA_FRAME;
     tMsg.IdType   = CAN_STD_ID;
@@ -215,14 +162,18 @@ void Test_NormalMode_Tx(UINT32 uCAN)
     tMsg.Data[0]  = 7;
     tMsg.Data[1]  = 0xFF;
 
-    if(CAN_Transmit(uCAN, MSG(0),&tMsg) == FALSE)   // Configure Msg RAM and send the Msg in the RAM
+    if(CAN_Transmit(uCAN, MSG(1),&tMsg) == FALSE)   // Configure Msg RAM and send the Msg in the RAM
     {
         sysprintf("Set Tx Msg Object failed\n");
         return;
     }
 
-    sysprintf("MSG(0).Send STD_ID:0x7FF, Data[07,FF]done\n");
-#endif
+    while(TX_FLAG == 0);
+
+    sysprintf("\nMSG(2).Send EXT:0x12345 ,Data[01,23,45] \n");
+    for(i=0; i < 30000; i++); // wait print debug message
+
+    TX_FLAG = 0;
 
     /* Send a 29-bits message */
     tMsg.FrameType= DATA_FRAME;
@@ -233,13 +184,18 @@ void Test_NormalMode_Tx(UINT32 uCAN)
     tMsg.Data[1]  = 0x23;
     tMsg.Data[2]  = 0x45;
 
-    if(CAN_Transmit(uCAN, MSG(1),&tMsg) == FALSE)
+    if(CAN_Transmit(uCAN, MSG(2),&tMsg) == FALSE)
     {
         sysprintf("Set Tx Msg Object failed\n");
         return;
     }
 
-    sysprintf("MSG(1).Send EXT:0x12345 ,Data[01,23,45]done\n");
+    while(TX_FLAG == 0);
+
+    sysprintf("\nMSG(3).Send EXT:0x7FF01 ,Data[A1,B2,C3,D4] \n");
+    for(i=0; i < 30000; i++); // wait print debug message
+
+    TX_FLAG = 0;
 
     /* Send a data message */
     tMsg.FrameType= DATA_FRAME;
@@ -257,7 +213,7 @@ void Test_NormalMode_Tx(UINT32 uCAN)
         return;
     }
 
-    sysprintf("MSG(3).Send EXT:0x7FF01 ,Data[A1,B2,C3,D4]done\n");
+    while(TX_FLAG == 0);
 
     for(i=0; i < 10000; i++);
 
@@ -270,41 +226,19 @@ void Test_NormalMode_Tx(UINT32 uCAN)
 /*----------------------------------------------------------------------------*/
 void Test_NormalMode_SetRxMsg(UINT32 uCAN)
 {
-    if(CAN_SetRxMsg(uCAN, MSG(0),CAN_STD_ID, 0x7FF) == FALSE)
+    sysprintf("\n Set Rx Msg Filer: Extended ID '0x12345'");
+    sysprintf("\n If a frame with ID 0x12345 is received, the frame information will be displayed \n\n");
+
+    if(CAN_SetRxMsg(uCAN, MSG(0),CAN_EXT_ID, 0x12345) == FALSE)
     {
         sysprintf("Set Rx Msg Object failed\n");
         return;
     }
-
-    if(CAN_SetRxMsg(uCAN, MSG(5),CAN_EXT_ID, 0x12345) == FALSE)
-    {
-        sysprintf("Set Rx Msg Object failed\n");
-        return;
-    }
-
-    if(CAN_SetRxMsg(uCAN, MSG(31),CAN_EXT_ID, 0x7FF01) == FALSE)
-    {
-        sysprintf("Set Rx Msg Object failed\n");
-        return;
-    }
-
 }
 
 void Test_NormalMode_WaitRxMsg(UINT32 uCAN)
 {
     /*Choose one mode to test*/
-#if 1
-    UINT32 uOffset = uCAN * CAN_OFFSET;
-
-    /* Polling Mode */
-    while(1)
-    {
-        while(inpw(REG_CAN0_IIDR+uOffset) == 0);            /* Wait IDR is changed */
-        sysprintf("IDR = 0x%x\n",inpw(REG_CAN0_IIDR+uOffset));
-        CAN_Receive(uCAN, (inpw(REG_CAN0_IIDR+uOffset) -1), &rrMsg);
-        CAN_ShowMsg(&rrMsg);
-    }
-#else
     /* INT Mode */
     CAN_EnableInt(uCAN, CAN_CON_IE_Msk);
 
@@ -314,41 +248,23 @@ void Test_NormalMode_WaitRxMsg(UINT32 uCAN)
         sysSetLocalInterrupt(ENABLE_IRQ);                            /* enable CPSR I bit */
         sysEnableInterrupt(CAN0_IRQn);
     }
-    else if(uCAN == CAN1)
-    {
-        sysInstallISR((IRQ_LEVEL_1 | HIGH_LEVEL_SENSITIVE), CAN1_IRQn, (PVOID)CAN1_IRQHandler);
-        sysSetLocalInterrupt(ENABLE_IRQ);                            /* enable CPSR I bit */
-        sysEnableInterrupt(CAN1_IRQn);
-    }
-
-    sysprintf("Wait Msg\n");
-    sysprintf("Enter any key to exit\n");
-    sysGetChar();
-#endif
 }
 
 int main()
 {
-    //SYS_Init();
-    //UART0_Init();
-
     sysDisableCache();
     sysFlushCache(I_D_CACHE);
     sysEnableCache(CACHE_WRITE_BACK);
     sysInitializeUART();
 
     // CAN0
-    outpw(REG_SYS_GPH_MFPL, (inpw(REG_SYS_GPH_MFPL) & 0xffff00ff) | 0xCC00 ); // GPH_2,GPH_3 // RX, TX
+    outpw(REG_SYS_GPI_MFPL, (inpw(REG_SYS_GPI_MFPL) & 0xfff00fff) | 0xCC000 ); // GPI_3,GPI_4 // RX, TX
 
-    //CAN_1
-    outpw(REG_SYS_GPH_MFPH, (inpw(REG_SYS_GPH_MFPH) & 0x00ffffff) | 0xCC000000 ); // GPH_14,GPH_15 // RX, TX
-
-    outpw(REG_CLK_PCLKEN1, (inpw(REG_CLK_PCLKEN1) | (1 << 8) | (1 << 9)) );
+    outpw(REG_CLK_PCLKEN1, (inpw(REG_CLK_PCLKEN1) | (1 << 8)) );
 
     Note_Configure();
 
     CAN_Open(CAN0,  500000, CAN_NORMAL_MODE);
-    CAN_Open(CAN1,  500000, CAN_NORMAL_MODE);
 
     sysprintf("\n");
     sysprintf("+------------------------------------------------------------------ +\n");
@@ -360,13 +276,15 @@ int main()
     sysprintf("Press any key to continue ...\n\n");
     sysGetChar();
 
-    Test_NormalMode_SetRxMsg(CAN1);
+    Test_NormalMode_SetRxMsg(CAN0);
+    Test_NormalMode_WaitRxMsg(CAN0);
 
+    while(1)
+    {
+        sysprintf("\n\n Press any key to start TX transmission ...\n");
+        sysGetChar();
     Test_NormalMode_Tx(CAN0);
-
-    Test_NormalMode_WaitRxMsg(CAN1);
-
-    while(1) ;
+    }
 
 }
 
