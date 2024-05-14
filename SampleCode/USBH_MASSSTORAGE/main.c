@@ -561,9 +561,9 @@ int32_t main(void)
                     sysprintf("\n");
 #endif
                 }
-                sysprintf("%4d File(s),%10d bytes total\n%4d Dir(s)", s1, p1, s2);
+                sysprintf("%d File(s), %d KB total\n%d Dir(s)", s1, (uint32_t)p1 / 1024, s2);
                 if (f_getfree(ptr, (DWORD*)&p1, &fs) == FR_OK)
-                    sysprintf(", %10d bytes free\n", p1 * fs->csize * 512);
+                    sysprintf(", %d KB free\n", (uint32_t)p1 * fs->csize * 512 / 1024);
                 break;
 
 

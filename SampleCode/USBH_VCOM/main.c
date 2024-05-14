@@ -20,6 +20,8 @@
 
 #define MAX_VCOM_PORT      8
 
+uint32_t  g_buff_pool[1024] __attribute__((aligned(32)));
+
 char Line[64];             /* Console input buffer */
 
 typedef struct
@@ -249,7 +251,7 @@ int32_t main(void)
 {
     CDC_DEV_T   *cdev;
     int         i, ret;
-    char        message[64];
+    char        *message;
 
     sysDisableCache();
     sysFlushCache(I_D_CACHE);
@@ -261,6 +263,8 @@ int32_t main(void)
 
     // set PE.14 & PE.15 for USBH_PPWR0 & USBH_PPWR1
     outpw(REG_SYS_GPE_MFPH, (inpw(REG_SYS_GPE_MFPH) & ~0xff000000) | 0x77000000);
+
+    message = (char *)((uint32_t)g_buff_pool);
 
     sysprintf("\n\n");
     sysprintf("+--------------------------------------------+\n");

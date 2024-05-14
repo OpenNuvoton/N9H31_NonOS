@@ -25,10 +25,10 @@
 
 #define SELECT_MJPEG
 
-#define SELECT_RES_WIDTH     640
+#define SELECT_RES_WIDTH     800
 #define SELECT_RES_HEIGHT    480
 
-#define IMAGE_MAX_SIZE       (640*480*2)
+#define IMAGE_MAX_SIZE       (800 * 480 * 2)
 
 #define SNAPSHOT_POST_TIME   300          /* Let snapshot image posted on OSD for 3 seconds */
 
@@ -116,16 +116,21 @@ static void init_lcd(void)
     //GPA8 ~ GPA15 (DATA8~15)
     outpw(REG_SYS_GPA_MFPH, 0x22222222);
 
+    //GPD8 ~ GPD15 (DATA16~23)
+    outpw(REG_SYS_GPD_MFPH, 0x22222222);
+
     // LCD clock is selected from UPLL and divide to 20MHz
     outpw(REG_CLK_DIVCTL1, (inpw(REG_CLK_DIVCTL1) & ~0xff1f) | 0xe18);
 
     // Init LCD interface for E50A2V1 LCD module
     vpostLCMInit(DIS_PANEL_E50A2V1);
+
     // Set scale to 1:1
     vpostVAScalingCtrl(1, 0, 1, 0, VA_SCALE_INTERPOLATION);
 
-    /* Select YUV422 format */
-    vpostSetVASrc(VA_SRC_RGB565);
+    // Set display color depth
+    vpostSetVASrc(VA_SRC_RGB888);
+    //vpostSetVASrc(VA_SRC_RGB565);
 
     g_LCD_base = vpostGetFrameBuffer();
     if(g_LCD_base == NULL)
@@ -135,7 +140,7 @@ static void init_lcd(void)
     }
 
     // Set OSD position and display size
-    vpostOSDSetWindow(80, 0, SELECT_RES_WIDTH, SELECT_RES_HEIGHT);
+    vpostOSDSetWindow(0, 0, SELECT_RES_WIDTH, SELECT_RES_HEIGHT);
 
     vpostSetOSDSrc(OSD_SRC_YCBCR422);
 
