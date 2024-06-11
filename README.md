@@ -25,4 +25,4 @@ Please note that all data and specifications are subject to change without notic
 trademarks of products and companies mentioned in this datasheet belong to their respective
 owners.
 
-**Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved**
+**Copyright (C) 2024 Nuvoton Technology Corp. All rights reserved**
