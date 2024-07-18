@@ -51,10 +51,10 @@ static uint8_t i2sOpened = 0;
 static void i2sStartPlay(void)
 {
     /* start playing */
-    sysprintf("IIS start playing...\n");
+    //sysprintf("IIS start playing...\n");
 
     outpw(REG_ACTL_PSR, 0x1);
-    outpw(REG_ACTL_RESET, inpw(REG_ACTL_RESET) | (1<<5) );
+    outpw(REG_ACTL_RESET, inpw(REG_ACTL_RESET) | (1<<5));
 }
 
 /**
@@ -64,10 +64,10 @@ static void i2sStartPlay(void)
   */
 static void i2sStopPlay(void)
 {
-    sysprintf("IIS stop playing\n");
+    //sysprintf("IIS stop playing\n");
 
     /* stop playing */
-    outpw(REG_ACTL_RESET, inpw(REG_ACTL_RESET) & ~(1<<5) );
+    outpw(REG_ACTL_RESET, inpw(REG_ACTL_RESET) & ~(1<<5));
 }
 
 /**
@@ -78,7 +78,7 @@ static void i2sStopPlay(void)
 static void i2sStartRecord(void)
 {
     /* start recording */
-    sysprintf("IIS start recording...\n");
+    //sysprintf("IIS start recording...\n");
 
     outpw(REG_ACTL_RSR, 0x1);
     outpw(REG_ACTL_RESET, inpw(REG_ACTL_RESET) | (1<<6));
@@ -91,7 +91,7 @@ static void i2sStartRecord(void)
   */
 static void i2sStopRecord(void)
 {
-    sysprintf("I2S stop recording\n");
+    //sysprintf("I2S stop recording\n");
 
     /* stop recording */
     outpw(REG_ACTL_RESET, inpw(REG_ACTL_RESET) & ~(1<<6));
@@ -410,6 +410,7 @@ void i2sSetSampleRate(uint32_t u32SourceClockRate, uint32_t u32SampleRate, uint3
 
     u32MCLK = (u32SampleRate*256);
     u32MCLKDiv = u32SourceClockRate / u32MCLK;
+    if (u32MCLKDiv == 0) u32MCLKDiv++;
     outpw(REG_ACTL_I2SCON, (inpw(REG_ACTL_I2SCON) & ~0x000F0000) | (u32MCLKDiv-1) << 16);
 
     u32BCLKDiv = u32MCLK / (u32SampleRate*u32DataBit*u32Channel);
@@ -429,6 +430,7 @@ void i2sSetMCLKFrequency(uint32_t u32SourceClockRate, uint32_t u32SampleRate)
 
     u32MCLK = (u32SampleRate*256);
     u32MCLKDiv = u32SourceClockRate / u32MCLK;
+    if (u32MCLKDiv == 0) u32MCLKDiv++;
     outpw(REG_ACTL_I2SCON, (inpw(REG_ACTL_I2SCON) & ~0x000F0000) | (u32MCLKDiv-1) << 16);
 }
 
