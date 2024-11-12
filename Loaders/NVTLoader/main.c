@@ -100,7 +100,8 @@ void sysInit(void)
 UINT32 NVT_LoadAppFromNAND(void)
 {
 	UINT bytes;
-    uint32_t result, offset=0;
+    uint32_t volatile offset=0;
+    uint32_t result;
     INT found_app = 0;
     UINT32 u32TotalSize;
     void    (*_jump)(void);
@@ -229,7 +230,7 @@ UINT32 NVT_LoadAppFromNAND(void)
         sysprintf("Cannot find conprog.bin\n");
     }
 halt:
-    sysprintf("systen exit\n");
+    sysprintf("system exit\n");
     while(1); // never return
 }
 

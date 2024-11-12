@@ -11,7 +11,7 @@
 
 
 
-ROM_LOAD 0x800000
+ROM_LOAD 0x1C00000
 {
     ROM +0
     {
