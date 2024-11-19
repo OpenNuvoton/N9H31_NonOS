@@ -157,6 +157,33 @@ static VPOST_T DEF_ST70IPS1024600  =
     0x02650264
 };
 
+#define ST70IPS2801424_WIDTH        280   /*!< XRES */
+#define ST70IPS2801424_HEIGHT       1424  /*!< YRES */
+#define ST70IPS2801424_MARGIN_LEFT  36    /*!< HBP (Horizontal Back Porch) */
+#define ST70IPS2801424_MARGIN_RIGHT 46    /*!< HFP (Horizontal Front Porch) */
+#define ST70IPS2801424_MARGIN_UPPER 6     /*!< VBP (Vertical Back Porch) */
+#define ST70IPS2801424_MARGIN_LOWER 16    /*!< VFP (Vertical Front Porch) */
+#define ST70IPS2801424_HSYNC_LEN    10    /*!< HPW (HSYNC plus width) */
+#define ST70IPS2801424_VSYNC_LEN    4     /*!< VPW (VSYNC width) */
+static VPOST_T DEF_ST70IPS2801424  =
+{
+    ST70IPS2801424_WIDTH,           /*!< Panel width */
+    ST70IPS2801424_HEIGHT,          /*!< Panel height */
+    0,                              /*!< MPU command line low indicator */
+    0,                              /*!< MPU command width */
+    0,                              /*!< MPU bus width */
+    VPOSTB_DATA16or18,              /*!< Display bus width */
+    0,                              /*!< MPU mode */
+    VPOSTB_COLORTYPE_16M,           /*!< Display colors */
+    VPOSTB_DEVICE_SYNC_HIGHCOLOR,   /*!< Type of display panel */
+
+    0x05AA0174,
+    0x05900118,
+    0x012C0127,
+    0x01310127,
+    0x05A30599
+};
+
 /* LCD build-in support list */
 static VPOST_T *DisplayDevList[DIS_PANEL_CNT] =
 {
@@ -165,7 +192,8 @@ static VPOST_T *DisplayDevList[DIS_PANEL_CNT] =
     &DEF_LSA40AT9001,
     &DEF_FW070TFT,
     &DEF_FW043TFT,
-    &DEF_ST70IPS1024600
+    &DEF_ST70IPS1024600,
+    &DEF_ST70IPS2801424,
 };
 
 static VPOST_T curDisplayDev;
@@ -600,7 +628,6 @@ uint8_t *vpostGetOSDBuffer(void)
     u8BufPtr = (uint8_t *)shift_pointer((uint32_t)u8BufPtr, 32);
 
     outpw(REG_LCM_OSD_BADDR, (uint32_t)((uint32_t)u8BufPtr | 0x80000000));
-
     return (uint8_t *)((uint32_t)u8BufPtr | 0x80000000);
 }
 
