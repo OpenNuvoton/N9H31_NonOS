@@ -269,16 +269,17 @@ void initVPostShowLogo(void)
         outpw(REG_SYS_GPD_MFPH, 0x22222222);
         // LCD clock is selected from UPLL and divide to 20MHz
         outpw(REG_CLK_DIVCTL1, (inpw(REG_CLK_DIVCTL1) & ~0xff1f) | 0xE18);
-        // Init LCD interface for FW070TFT LCD module
-        vpostLCMInit(DIS_PANEL_FW070TFT);
+        // Init LCD interface
+        vpostLCMInit(DIS_PANEL_E50A2V1);
+        // Set scale to 1:1
+        vpostVAScalingCtrl(1, 0, 1, 0, VA_SCALE_INTERPOLATION);
         // Set display color depth
         vpostSetVASrc(VA_SRC_RGB565);
-        //vpostSetFrameBuffer((uint8_t *)0x1000000);
+        vpostSetFrameBuffer((uint8_t *)0x1C80000);
 
-		/* 1. If backlight control signal is different from nuvoton¡¦s demo board,
-           please don't call this function and must implement another similar one to enable LCD backlight. */
-        //vpostEnaBacklight();
-	}	
+        // Start video
+        vpostVAStartTrigger();
+	}
 }
 
 
