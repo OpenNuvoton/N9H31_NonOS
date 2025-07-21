@@ -177,11 +177,11 @@ static VPOST_T DEF_ST70IPS2801424  =
     VPOSTB_COLORTYPE_16M,           /*!< Display colors */
     VPOSTB_DEVICE_SYNC_HIGHCOLOR,   /*!< Type of display panel */
 
-    0x05AA0174,
-    0x05900118,
-    0x012C0127,
-    0x01310127,
-    0x05A30599
+    0x5AA016A,
+    0x5940118,
+    0x12C0127,
+    0x1310127,
+    0x5A7059D,
 };
 
 /* LCD build-in support list */
