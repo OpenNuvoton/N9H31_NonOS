@@ -1077,7 +1077,7 @@ int32_t NAND_EraseBlock(int32_t pba)
 		}
 	}
 	else
-		return -1;
+		return -2;
 
 	return 0;
 }
